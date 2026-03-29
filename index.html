@@ -229,6 +229,45 @@
       justify-content: center; min-height: 220px; text-align: center; gap: 20px;
     }
     .start-wrap p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+
+    /* ── Finish banner ── */
+    .finish-banner {
+      background: #14271c;
+      border: 1.5px solid var(--accent);
+      border-radius: var(--r);
+      padding: 20px 16px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .finish-banner .big { font-size: 28px; margin-bottom: 6px; }
+    .finish-banner h2   { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .finish-banner p    { font-size: 13px; color: var(--text-dim); }
+
+    /* ── History ── */
+    .hist-card {
+      background: var(--surface);
+      border-radius: var(--r);
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .hist-head {
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .hist-head .date  { font-size: 14px; font-weight: 700; }
+    .hist-head .badge { font-size: 11px; color: var(--accent); font-weight: 600;
+                        background: #14271c; padding: 2px 8px; border-radius: 20px; }
+    .hist-ex {
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .hist-ex:last-child { border-bottom: none; }
+    .hist-ex-name  { font-size: 14px; font-weight: 600; flex-shrink: 0; }
+    .hist-ex-sets  { font-size: 13px; color: var(--accent); text-align: right; }
   </style>
 </head>
 <body>
@@ -333,6 +372,8 @@ const I = {
   check:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
   x:        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
   edit:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+  flag:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`,
+  clock:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -419,10 +460,25 @@ function viewWorkout() {
       </div>`;
   });
 
+  const finishBtn = workout.finished
+    ? `<div class="finish-banner">
+         <div class="big">✅</div>
+         <h2>Trening zakończony!</h2>
+         <p>${fmtDate(workout.date)}</p>
+       </div>
+       <button class="btn btn-ghost" onclick="resumeWorkout()">Edytuj trening</button>`
+    : `<button class="btn btn-primary" style="margin-top:8px" onclick="finishWorkout()">
+         ${I.flag} Zakończ trening
+       </button>`;
+
   return `
     <div class="header"><div><h1>Trening</h1><div class="subtitle">${fmtDate(DB.todayKey())}</div></div></div>
-    <div class="content">${cards}</div>
-    <button class="fab" onclick="goPickExercise()" title="Dodaj ćwiczenie">${I.plus}</button>
+    <div class="content">
+      ${workout.finished ? finishBtn : ''}
+      ${cards}
+      ${!workout.finished ? finishBtn : ''}
+    </div>
+    ${!workout.finished ? `<button class="fab" onclick="goPickExercise()" title="Dodaj ćwiczenie">${I.plus}</button>` : ''}
   `;
 }
 
@@ -494,6 +550,52 @@ function viewExercises() {
       </button>
     </div>
   `;
+}
+
+function viewHistory() {
+  const exercises = DB.getExercises();
+  const today = DB.todayKey();
+  const workouts = DB.getWorkouts()
+    .filter(w => w.date < today || w.finished)
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  if (workouts.length === 0) {
+    return `
+      <div class="header"><div><h1>Historia</h1></div></div>
+      <div class="content">
+        <div class="empty">Brak historii treningów.<br>Zakończ pierwszy trening, żeby pojawił się tutaj.</div>
+      </div>`;
+  }
+
+  let cards = '';
+  for (const w of workouts) {
+    const exRows = w.exercises.map(wex => {
+      const ex   = exercises.find(e => e.id === wex.exerciseId);
+      const name = ex ? ex.name : '(usunięte)';
+      const sets = wex.sets
+        .filter(s => s.weight !== '' && s.weight != null)
+        .map(s => s.weight + ' kg')
+        .join(' · ') || '–';
+      return `<div class="hist-ex">
+        <div class="hist-ex-name">${esc(name)}</div>
+        <div class="hist-ex-sets">${sets}</div>
+      </div>`;
+    }).join('');
+
+    const badge = w.finished ? `<span class="badge">ukończony</span>` : '';
+    cards += `
+      <div class="hist-card">
+        <div class="hist-head">
+          <div class="date">${fmtDate(w.date)}</div>
+          ${w.finished ? `<span class="badge">ukończony</span>` : ''}
+        </div>
+        ${exRows || `<div style="padding:12px 14px;color:var(--text-dim);font-size:13px">brak ćwiczeń</div>`}
+      </div>`;
+  }
+
+  return `
+    <div class="header"><div><h1>Historia</h1></div></div>
+    <div class="content">${cards}</div>`;
 }
 
 function viewAddExercise() {
@@ -572,6 +674,22 @@ function removeExerciseFromWorkout(exIdx) {
   render();
 }
 
+function finishWorkout() {
+  const w = DB.getTodayWorkout();
+  if (!w) return;
+  w.finished = true;
+  DB.saveTodayWorkout(w);
+  go({ tab: 'workout', view: 'home' });
+}
+
+function resumeWorkout() {
+  const w = DB.getTodayWorkout();
+  if (!w) return;
+  w.finished = false;
+  DB.saveTodayWorkout(w);
+  render();
+}
+
 function saveNewExercise() {
   const input = document.getElementById('ex-name');
   const name  = input?.value?.trim();
@@ -634,15 +752,19 @@ function render() {
   let body = '';
   const showNav = S.view === 'home';
 
-  if (S.view === 'pick-exercise')  body = viewPickExercise();
+  if (S.view === 'pick-exercise')     body = viewPickExercise();
   else if (S.view === 'add-exercise') body = viewAddExercise();
-  else if (S.tab === 'workout')    body = viewWorkout();
-  else if (S.tab === 'exercises')  body = viewExercises();
+  else if (S.tab === 'workout')       body = viewWorkout();
+  else if (S.tab === 'history')       body = viewHistory();
+  else if (S.tab === 'exercises')     body = viewExercises();
 
   const nav = showNav ? `
     <nav class="bottom-nav">
       <button class="nav-btn ${S.tab === 'workout'   ? 'active' : ''}" onclick="setTab('workout')">
         ${I.dumbbell} Trening
+      </button>
+      <button class="nav-btn ${S.tab === 'history'   ? 'active' : ''}" onclick="setTab('history')">
+        ${I.clock} Historia
       </button>
       <button class="nav-btn ${S.tab === 'exercises' ? 'active' : ''}" onclick="setTab('exercises')">
         ${I.list} Ćwiczenia
