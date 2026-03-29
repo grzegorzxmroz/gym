@@ -46,8 +46,8 @@
       gap: 8px;
       flex-shrink: 0;
     }
-    .header h1   { font-size: 18px; font-weight: 700; }
-    .subtitle    { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+    .header h1  { font-size: 18px; font-weight: 700; }
+    .subtitle   { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
 
     /* ── Scrollable area ── */
     .content {
@@ -105,10 +105,10 @@
       font-size: 10px; font-weight: 600; text-transform: uppercase;
       color: var(--text-dim); letter-spacing: 0.4px;
     }
-    .sh-num   { width: 28px; text-align: center; flex-shrink: 0; }
-    .sh-prev  { width: 68px; text-align: center; flex-shrink: 0; }
-    .sh-cur   { flex: 1; text-align: center; }
-    .sh-del   { width: 28px; flex-shrink: 0; }
+    .sh-num  { width: 28px; text-align: center; flex-shrink: 0; }
+    .sh-prev { width: 68px; text-align: center; flex-shrink: 0; }
+    .sh-cur  { flex: 1; text-align: center; }
+    .sh-del  { width: 28px; flex-shrink: 0; }
 
     .set-row {
       display: flex; align-items: center; gap: 10px;
@@ -158,12 +158,13 @@
       font-size: 15px; font-weight: 600;
       cursor: pointer; width: 100%;
     }
-    .btn:active { opacity: 0.75; }
-    .btn svg { width: 18px; height: 18px; }
-    .btn-primary  { background: var(--accent); color: #000; }
-    .btn-ghost    { background: transparent; color: var(--accent); border: 1.5px solid var(--border); }
-    .btn-sm       { padding: 9px 14px; font-size: 13px; }
-    .btn-sm svg   { width: 15px; height: 15px; }
+    .btn:active  { opacity: 0.75; }
+    .btn svg     { width: 18px; height: 18px; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-ghost   { background: transparent; color: var(--accent); border: 1.5px solid var(--border); }
+    .btn-danger  { background: var(--danger); color: #fff; }
+    .btn-sm      { padding: 9px 14px; font-size: 13px; }
+    .btn-sm svg  { width: 15px; height: 15px; }
 
     /* ── Icon button ── */
     .ibtn {
@@ -174,10 +175,10 @@
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .ibtn svg      { width: 20px; height: 20px; }
-    .ibtn:active   { background: var(--surface2); }
-    .ibtn.danger   { color: var(--danger); }
-    .ibtn.back     { color: var(--text); }
+    .ibtn svg    { width: 20px; height: 20px; }
+    .ibtn:active { background: var(--surface2); }
+    .ibtn.danger { color: var(--danger); }
+    .ibtn.back   { color: var(--text); }
 
     /* ── FAB ── */
     .fab {
@@ -220,28 +221,15 @@
     }
     .text-input:focus { outline: none; border-color: var(--accent); }
 
-    /* ── Misc ── */
-    .empty  { text-align: center; padding: 48px 20px; color: var(--text-dim); line-height: 1.6; }
-    label   { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
-    .mt16   { margin-top: 16px; }
+    /* ── Empty / start screen ── */
+    .empty     { text-align: center; padding: 48px 20px; color: var(--text-dim); line-height: 1.6; }
+    label      { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+    .mt16      { margin-top: 16px; }
     .start-wrap {
       display: flex; flex-direction: column; align-items: center;
       justify-content: center; min-height: 220px; text-align: center; gap: 20px;
     }
     .start-wrap p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
-
-    /* ── Finish banner ── */
-    .finish-banner {
-      background: #14271c;
-      border: 1.5px solid var(--accent);
-      border-radius: var(--r);
-      padding: 20px 16px;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    .finish-banner .big { font-size: 28px; margin-bottom: 6px; }
-    .finish-banner h2   { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-    .finish-banner p    { font-size: 13px; color: var(--text-dim); }
 
     /* ── History ── */
     .hist-card {
@@ -252,27 +240,48 @@
       overflow: hidden;
     }
     .hist-head {
-      padding: 12px 14px 10px;
+      padding: 12px 14px;
       border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
     }
-    .hist-head .date  { font-size: 14px; font-weight: 700; }
-    .hist-head .badge { font-size: 11px; color: var(--accent); font-weight: 600;
-                        background: #14271c; padding: 2px 8px; border-radius: 20px; }
+    .hist-head .hdate { font-size: 14px; font-weight: 700; }
+    .hist-head .htime { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
     .hist-ex {
       display: flex; align-items: baseline; justify-content: space-between;
       padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       gap: 12px;
     }
-    .hist-ex:last-child { border-bottom: none; }
-    .hist-ex-name  { font-size: 14px; font-weight: 600; flex-shrink: 0; }
-    .hist-ex-sets  { font-size: 13px; color: var(--accent); text-align: right; }
+    .hist-ex:last-child  { border-bottom: none; }
+    .hist-ex-name { font-size: 14px; font-weight: 600; flex-shrink: 0; }
+    .hist-ex-sets { font-size: 13px; color: var(--accent); text-align: right; }
   </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
+// ═══════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtDate(ts) {
+  return new Date(ts).toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+function fmtTime(ts) {
+  return new Date(ts).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+}
+function fmtDateShort(ts) {
+  return new Date(ts).toLocaleDateString('pl-PL', { day: 'numeric', month: 'short' });
+}
+function fmtWeight(w) {
+  return (w === '' || w == null) ? '–' : w + ' kg';
+}
+
 // ═══════════════════════════════════════════════════════════
 //  DATA LAYER
 // ═══════════════════════════════════════════════════════════
@@ -284,69 +293,59 @@ const DB = {
   saveExercises(list) {
     localStorage.setItem('gym_exercises', JSON.stringify(list));
   },
+
+  // Each workout: { id, timestamp, finished, exercises: [{ exerciseId, sets: [{weight}] }] }
   getWorkouts() {
-    return JSON.parse(localStorage.getItem('gym_workouts') || '[]');
+    const raw = JSON.parse(localStorage.getItem('gym_workouts') || '[]');
+    // Migrate old format (date-keyed, no id) to new format
+    return raw.map(w => ({
+      id:        w.id        || w.date,
+      timestamp: w.timestamp || new Date((w.date || '2000-01-01') + 'T12:00:00').getTime(),
+      finished:  w.finished  !== undefined ? w.finished : (w.id ? false : true),
+      exercises: w.exercises || [],
+    }));
   },
   saveWorkouts(list) {
     localStorage.setItem('gym_workouts', JSON.stringify(list));
   },
-  todayKey() {
-    return new Date().toISOString().slice(0, 10);
+
+  // The current in-progress workout (most recent unfinished)
+  getCurrentWorkout() {
+    const active = this.getWorkouts().filter(w => !w.finished);
+    if (!active.length) return null;
+    return active.sort((a, b) => b.timestamp - a.timestamp)[0];
   },
-  getTodayWorkout() {
-    return this.getWorkouts().find(w => w.date === this.todayKey()) || null;
-  },
-  getOrCreateTodayWorkout() {
-    let w = this.getTodayWorkout();
-    if (!w) {
-      w = { date: this.todayKey(), exercises: [] };
-      const all = this.getWorkouts();
-      all.push(w);
-      this.saveWorkouts(all);
-    }
+
+  // Start a brand new workout
+  createWorkout() {
+    const w = { id: uid(), timestamp: Date.now(), finished: false, exercises: [] };
+    const all = this.getWorkouts();
+    all.push(w);
+    this.saveWorkouts(all);
     return w;
   },
-  saveTodayWorkout(workout) {
+
+  // Persist changes to an existing workout
+  saveWorkout(workout) {
     const all = this.getWorkouts();
-    const i = all.findIndex(w => w.date === workout.date);
+    const i = all.findIndex(w => w.id === workout.id);
     if (i >= 0) all[i] = workout; else all.push(workout);
     this.saveWorkouts(all);
   },
-  // Returns { date, sets } from most recent past workout containing this exercise
-  getPrevData(exerciseId) {
-    const today = this.todayKey();
-    const past = this.getWorkouts()
-      .filter(w => w.date < today)
-      .sort((a, b) => b.date.localeCompare(a.date));
-    for (const w of past) {
+
+  // Most recent FINISHED workout that contains this exercise (excluding currentId)
+  getPrevData(exerciseId, currentId) {
+    const finished = this.getWorkouts()
+      .filter(w => w.finished && w.id !== currentId)
+      .sort((a, b) => b.timestamp - a.timestamp);
+    for (const w of finished) {
       const ex = w.exercises.find(e => e.exerciseId === exerciseId);
-      if (ex && ex.sets.length > 0) return { date: w.date, sets: ex.sets };
+      if (ex && ex.sets.some(s => s.weight !== '' && s.weight != null))
+        return { timestamp: w.timestamp, sets: ex.sets };
     }
     return null;
   },
 };
-
-// ═══════════════════════════════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════════════════════════════
-
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2);
-}
-
-function fmtDate(d) {
-  return new Date(d + 'T12:00:00').toLocaleDateString('pl-PL', {
-    weekday: 'long', day: 'numeric', month: 'long',
-  });
-}
-function fmtDateShort(d) {
-  return new Date(d + 'T12:00:00').toLocaleDateString('pl-PL', {
-    day: 'numeric', month: 'short',
-  });
-}
-function fmtWeight(w) {
-  return (w === '' || w === null || w === undefined) ? '–' : w + ' kg';
-}
 
 // ═══════════════════════════════════════════════════════════
 //  STATE
@@ -381,51 +380,42 @@ const I = {
 // ═══════════════════════════════════════════════════════════
 
 function viewWorkout() {
-  const workout  = DB.getTodayWorkout();
+  const workout   = DB.getCurrentWorkout();
   const exercises = DB.getExercises();
 
-  if (!workout || workout.exercises.length === 0) {
+  // No active workout → prompt to start one
+  if (!workout) {
     return `
-      <div class="header"><div><h1>Trening</h1><div class="subtitle">${fmtDate(DB.todayKey())}</div></div></div>
+      <div class="header"><div><h1>Trening</h1></div></div>
       <div class="content">
         <div class="start-wrap">
-          <p>Gotowy na dzisiejszy trening?<br>Dodaj pierwsze ćwiczenie.</p>
-          <button class="btn btn-primary" style="max-width:240px" onclick="goPickExercise()">
-            ${I.plus} Dodaj ćwiczenie
+          <p>Brak aktywnego treningu.<br>Rozpocznij nowy!</p>
+          <button class="btn btn-primary" style="max-width:240px" onclick="startWorkout()">
+            ${I.plus} Nowy trening
           </button>
         </div>
-      </div>
-    `;
+      </div>`;
   }
 
+  // Active workout — build exercise cards
   let cards = '';
   workout.exercises.forEach((wex, i) => {
     const ex   = exercises.find(e => e.id === wex.exerciseId);
     const name = ex ? ex.name : '(usunięte)';
-    const prev = DB.getPrevData(wex.exerciseId);
+    const prev = DB.getPrevData(wex.exerciseId, workout.id);
 
-    // Previous data badge
-    let badge = '';
-    if (prev) {
-      const weights = prev.sets.map(s => fmtWeight(s.weight)).join(' · ');
-      badge = `<div class="prev-badge">poprzednio (${fmtDateShort(prev.date)}): <em>${weights}</em></div>`;
-    } else {
-      badge = `<div class="prev-badge">brak poprzednich danych</div>`;
-    }
+    const badge = prev
+      ? `<div class="prev-badge">poprzednio (${fmtDateShort(prev.timestamp)}): <em>${prev.sets.map(s => fmtWeight(s.weight)).join(' · ')}</em></div>`
+      : `<div class="prev-badge">brak poprzednich danych</div>`;
 
-    // Column headers (only when there's previous data to compare)
-    let setsHead = '';
-    if (prev) {
-      setsHead = `
-        <div class="sets-head">
-          <div class="sh-num">SERIA</div>
-          <div class="sh-prev">POPRZEDNIO</div>
-          <div class="sh-cur">DZIŚ (kg)</div>
-          <div class="sh-del"></div>
-        </div>`;
-    }
+    const setsHead = prev ? `
+      <div class="sets-head">
+        <div class="sh-num">SERIA</div>
+        <div class="sh-prev">POPRZEDNIO</div>
+        <div class="sh-cur">DZIŚ (kg)</div>
+        <div class="sh-del"></div>
+      </div>` : '';
 
-    // Set rows
     let rows = '';
     wex.sets.forEach((set, j) => {
       const prevW = prev && prev.sets[j] != null ? fmtWeight(prev.sets[j].weight) : '';
@@ -436,55 +426,49 @@ function viewWorkout() {
           <input class="weight-input" type="number" inputmode="decimal" step="0.5" min="0"
             value="${set.weight !== '' && set.weight != null ? set.weight : ''}"
             placeholder="0"
-            onchange="updateWeight(${i},${j},this.value)"
+            onchange="updateWeight('${workout.id}',${i},${j},this.value)"
             onfocus="this.select()">
           <div class="weight-unit">kg</div>
-          <button class="ibtn danger" onclick="deleteSet(${i},${j})" title="Usuń serię">${I.x}</button>
+          <button class="ibtn danger" onclick="deleteSet('${workout.id}',${i},${j})">${I.x}</button>
         </div>`;
     });
 
     cards += `
       <div class="card">
         <div class="card-head">
-          <div style="flex:1;min-width:0">
-            <h3>${esc(name)}</h3>
-            ${badge}
-          </div>
-          <button class="ibtn danger" onclick="removeExerciseFromWorkout(${i})" title="Usuń z treningu">${I.trash}</button>
+          <div style="flex:1;min-width:0"><h3>${esc(name)}</h3>${badge}</div>
+          <button class="ibtn danger" onclick="removeExercise('${workout.id}',${i})">${I.trash}</button>
         </div>
         ${setsHead}
         <div>${rows}</div>
         <div class="card-foot">
-          <button class="btn btn-ghost btn-sm" onclick="addSet(${i})">${I.plus} Dodaj serię</button>
+          <button class="btn btn-ghost btn-sm" onclick="addSet('${workout.id}',${i})">${I.plus} Dodaj serię</button>
         </div>
       </div>`;
   });
 
-  const finishBtn = workout.finished
-    ? `<div class="finish-banner">
-         <div class="big">✅</div>
-         <h2>Trening zakończony!</h2>
-         <p>${fmtDate(workout.date)}</p>
-       </div>
-       <button class="btn btn-ghost" onclick="resumeWorkout()">Edytuj trening</button>`
-    : `<button class="btn btn-primary" style="margin-top:8px" onclick="finishWorkout()">
-         ${I.flag} Zakończ trening
-       </button>`;
+  const started = fmtTime(workout.timestamp);
 
   return `
-    <div class="header"><div><h1>Trening</h1><div class="subtitle">${fmtDate(DB.todayKey())}</div></div></div>
-    <div class="content">
-      ${workout.finished ? finishBtn : ''}
-      ${cards}
-      ${!workout.finished ? finishBtn : ''}
+    <div class="header">
+      <div style="flex:1">
+        <h1>Trening</h1>
+        <div class="subtitle">Rozpoczęty o ${started}</div>
+      </div>
     </div>
-    ${!workout.finished ? `<button class="fab" onclick="goPickExercise()" title="Dodaj ćwiczenie">${I.plus}</button>` : ''}
-  `;
+    <div class="content">
+      ${cards}
+      ${workout.exercises.length > 0 ? `
+        <button class="btn btn-primary" style="margin-top:4px" onclick="finishWorkout('${workout.id}')">
+          ${I.flag} Zakończ trening
+        </button>` : ''}
+    </div>
+    <button class="fab" onclick="goPickExercise()" title="Dodaj ćwiczenie">${I.plus}</button>`;
 }
 
 function viewPickExercise() {
   const exercises = DB.getExercises();
-  const workout   = DB.getTodayWorkout();
+  const workout   = DB.getCurrentWorkout();
   const usedIds   = new Set((workout?.exercises || []).map(e => e.exerciseId));
 
   let list = '';
@@ -495,12 +479,9 @@ function viewPickExercise() {
     exercises.forEach(ex => {
       const used = usedIds.has(ex.id);
       list += `
-        <div class="ex-item ${used ? 'used' : ''}"
-          ${used ? '' : `onclick="pickExercise('${ex.id}')"`}>
+        <div class="ex-item ${used ? 'used' : ''}" ${used ? '' : `onclick="pickExercise('${ex.id}')"`}>
           <span class="ex-name">${esc(ex.name)}</span>
-          ${used
-            ? `<span class="ex-meta">już dodane</span>`
-            : `<span style="color:var(--accent)">${I.plus}</span>`}
+          ${used ? `<span class="ex-meta">już dodane</span>` : `<span style="color:var(--accent)">${I.plus}</span>`}
         </div>`;
     });
     list += `</div>`;
@@ -516,8 +497,51 @@ function viewPickExercise() {
       <button class="btn btn-ghost mt16" onclick="go({view:'add-exercise',returnTo:'pick'})">
         ${I.plus} Nowe ćwiczenie
       </button>
-    </div>
-  `;
+    </div>`;
+}
+
+function viewHistory() {
+  const exercises = DB.getExercises();
+  const finished  = DB.getWorkouts()
+    .filter(w => w.finished)
+    .sort((a, b) => b.timestamp - a.timestamp);
+
+  if (finished.length === 0) {
+    return `
+      <div class="header"><div><h1>Historia</h1></div></div>
+      <div class="content">
+        <div class="empty">Brak historii treningów.<br>Zakończ pierwszy trening,<br>żeby pojawił się tutaj.</div>
+      </div>`;
+  }
+
+  let cards = '';
+  for (const w of finished) {
+    const exRows = w.exercises.map(wex => {
+      const ex   = exercises.find(e => e.id === wex.exerciseId);
+      const name = ex ? ex.name : '(usunięte)';
+      const sets = wex.sets
+        .filter(s => s.weight !== '' && s.weight != null)
+        .map(s => s.weight + ' kg')
+        .join(' · ') || '–';
+      return `<div class="hist-ex">
+        <div class="hist-ex-name">${esc(name)}</div>
+        <div class="hist-ex-sets">${sets}</div>
+      </div>`;
+    }).join('');
+
+    cards += `
+      <div class="hist-card">
+        <div class="hist-head">
+          <div class="hdate">${fmtDate(w.timestamp)}</div>
+          <div class="htime">${fmtTime(w.timestamp)}</div>
+        </div>
+        ${exRows || `<div style="padding:12px 14px;color:var(--text-dim);font-size:13px">brak ćwiczeń</div>`}
+      </div>`;
+  }
+
+  return `
+    <div class="header"><div><h1>Historia</h1></div></div>
+    <div class="content">${cards}</div>`;
 }
 
 function viewExercises() {
@@ -533,8 +557,8 @@ function viewExercises() {
         <div class="ex-item" style="cursor:default">
           <span class="ex-name">${esc(ex.name)}</span>
           <div class="ex-actions">
-            <button class="ibtn" onclick="renameExercise('${ex.id}')" title="Zmień nazwę">${I.edit}</button>
-            <button class="ibtn danger" onclick="deleteExercise('${ex.id}')" title="Usuń">${I.trash}</button>
+            <button class="ibtn" onclick="renameExercise('${ex.id}')">${I.edit}</button>
+            <button class="ibtn danger" onclick="deleteExercise('${ex.id}')">${I.trash}</button>
           </div>
         </div>`;
     });
@@ -548,54 +572,7 @@ function viewExercises() {
       <button class="btn btn-primary mt16" onclick="go({view:'add-exercise',returnTo:'exercises'})">
         ${I.plus} Dodaj ćwiczenie
       </button>
-    </div>
-  `;
-}
-
-function viewHistory() {
-  const exercises = DB.getExercises();
-  const today = DB.todayKey();
-  const workouts = DB.getWorkouts()
-    .filter(w => w.date < today || w.finished)
-    .sort((a, b) => b.date.localeCompare(a.date));
-
-  if (workouts.length === 0) {
-    return `
-      <div class="header"><div><h1>Historia</h1></div></div>
-      <div class="content">
-        <div class="empty">Brak historii treningów.<br>Zakończ pierwszy trening, żeby pojawił się tutaj.</div>
-      </div>`;
-  }
-
-  let cards = '';
-  for (const w of workouts) {
-    const exRows = w.exercises.map(wex => {
-      const ex   = exercises.find(e => e.id === wex.exerciseId);
-      const name = ex ? ex.name : '(usunięte)';
-      const sets = wex.sets
-        .filter(s => s.weight !== '' && s.weight != null)
-        .map(s => s.weight + ' kg')
-        .join(' · ') || '–';
-      return `<div class="hist-ex">
-        <div class="hist-ex-name">${esc(name)}</div>
-        <div class="hist-ex-sets">${sets}</div>
-      </div>`;
-    }).join('');
-
-    const badge = w.finished ? `<span class="badge">ukończony</span>` : '';
-    cards += `
-      <div class="hist-card">
-        <div class="hist-head">
-          <div class="date">${fmtDate(w.date)}</div>
-          ${w.finished ? `<span class="badge">ukończony</span>` : ''}
-        </div>
-        ${exRows || `<div style="padding:12px 14px;color:var(--text-dim);font-size:13px">brak ćwiczeń</div>`}
-      </div>`;
-  }
-
-  return `
-    <div class="header"><div><h1>Historia</h1></div></div>
-    <div class="content">${cards}</div>`;
+    </div>`;
 }
 
 function viewAddExercise() {
@@ -615,79 +592,81 @@ function viewAddExercise() {
           ${I.check} Zapisz
         </button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════
 //  ACTIONS
 // ═══════════════════════════════════════════════════════════
 
+function startWorkout() {
+  DB.createWorkout();
+  go({ tab: 'workout', view: 'home' });
+}
+
 function goPickExercise() {
+  // Ensure there's an active workout before picking
+  if (!DB.getCurrentWorkout()) DB.createWorkout();
   go({ view: 'pick-exercise' });
 }
 
-function pickExercise(id) {
-  const w = DB.getOrCreateTodayWorkout();
-  if (!w.exercises.find(e => e.exerciseId === id)) {
-    w.exercises.push({ exerciseId: id, sets: [{ weight: '' }] });
-    DB.saveTodayWorkout(w);
+function pickExercise(exerciseId) {
+  const w = DB.getCurrentWorkout();
+  if (!w) return;
+  if (!w.exercises.find(e => e.exerciseId === exerciseId)) {
+    w.exercises.push({ exerciseId, sets: [{ weight: '' }] });
+    DB.saveWorkout(w);
   }
   go({ tab: 'workout', view: 'home' });
 }
 
-function addSet(exIdx) {
-  const w = DB.getTodayWorkout();
+function addSet(workoutId, exIdx) {
+  const all = DB.getWorkouts();
+  const w   = all.find(x => x.id === workoutId);
   if (!w) return;
   w.exercises[exIdx].sets.push({ weight: '' });
-  DB.saveTodayWorkout(w);
+  DB.saveWorkouts(all);
   render();
 }
 
-function deleteSet(exIdx, setIdx) {
-  const w = DB.getTodayWorkout();
+function deleteSet(workoutId, exIdx, setIdx) {
+  const all  = DB.getWorkouts();
+  const w    = all.find(x => x.id === workoutId);
   if (!w) return;
   const sets = w.exercises[exIdx].sets;
-  if (sets.length === 1) {
-    sets[0].weight = '';
-  } else {
-    sets.splice(setIdx, 1);
-  }
-  DB.saveTodayWorkout(w);
+  if (sets.length === 1) { sets[0].weight = ''; }
+  else { sets.splice(setIdx, 1); }
+  DB.saveWorkouts(all);
   render();
 }
 
-function updateWeight(exIdx, setIdx, value) {
-  const w = DB.getTodayWorkout();
+function updateWeight(workoutId, exIdx, setIdx, value) {
+  const all = DB.getWorkouts();
+  const w   = all.find(x => x.id === workoutId);
   if (!w) return;
   const parsed = parseFloat(value);
   w.exercises[exIdx].sets[setIdx].weight = isNaN(parsed) ? '' : parsed;
-  DB.saveTodayWorkout(w);
+  DB.saveWorkouts(all);
 }
 
-function removeExerciseFromWorkout(exIdx) {
-  const w = DB.getTodayWorkout();
+function removeExercise(workoutId, exIdx) {
+  if (!confirm('Usunąć to ćwiczenie z treningu?')) return;
+  const all = DB.getWorkouts();
+  const w   = all.find(x => x.id === workoutId);
   if (!w) return;
-  if (!confirm('Usunąć to ćwiczenie z dzisiejszego treningu?')) return;
   w.exercises.splice(exIdx, 1);
-  DB.saveTodayWorkout(w);
+  DB.saveWorkouts(all);
   render();
 }
 
-function finishWorkout() {
-  const w = DB.getTodayWorkout();
+function finishWorkout(workoutId) {
+  const all = DB.getWorkouts();
+  const w   = all.find(x => x.id === workoutId);
   if (!w) return;
   w.finished = true;
-  DB.saveTodayWorkout(w);
+  DB.saveWorkouts(all);
+  // Workout tab now shows "Brak aktywnego treningu" — clean slate
   go({ tab: 'workout', view: 'home' });
-}
-
-function resumeWorkout() {
-  const w = DB.getTodayWorkout();
-  if (!w) return;
-  w.finished = false;
-  DB.saveTodayWorkout(w);
-  render();
 }
 
 function saveNewExercise() {
@@ -708,11 +687,8 @@ function saveNewExercise() {
 }
 
 function cancelAddExercise() {
-  if (S.returnTo === 'pick') {
-    go({ view: 'pick-exercise' });
-  } else {
-    go({ view: 'home', tab: 'exercises' });
-  }
+  if (S.returnTo === 'pick') go({ view: 'pick-exercise' });
+  else go({ view: 'home', tab: 'exercises' });
 }
 
 function deleteExercise(id) {
@@ -740,23 +716,15 @@ function setTab(tab) {
 //  RENDER
 // ═══════════════════════════════════════════════════════════
 
-function esc(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
 function render() {
   let body = '';
   const showNav = S.view === 'home';
 
-  if (S.view === 'pick-exercise')     body = viewPickExercise();
-  else if (S.view === 'add-exercise') body = viewAddExercise();
-  else if (S.tab === 'workout')       body = viewWorkout();
-  else if (S.tab === 'history')       body = viewHistory();
-  else if (S.tab === 'exercises')     body = viewExercises();
+  if      (S.view === 'pick-exercise')  body = viewPickExercise();
+  else if (S.view === 'add-exercise')   body = viewAddExercise();
+  else if (S.tab  === 'workout')        body = viewWorkout();
+  else if (S.tab  === 'history')        body = viewHistory();
+  else if (S.tab  === 'exercises')      body = viewExercises();
 
   const nav = showNav ? `
     <nav class="bottom-nav">
