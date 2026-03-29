@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f0f0f">
+  <title>Gym Tracker</title>
+  <style>
+    :root {
+      --bg:        #0f0f0f;
+      --surface:   #1a1a1a;
+      --surface2:  #252525;
+      --accent:    #22c55e;
+      --text:      #f1f1f1;
+      --text-dim:  #777;
+      --danger:    #ef4444;
+      --border:    #2e2e2e;
+      --r:         10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #app { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── Header ── */
+    .header {
+      background: var(--surface);
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .header h1   { font-size: 18px; font-weight: 700; }
+    .subtitle    { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+    /* ── Scrollable area ── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 14px 110px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 480px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 20;
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 10px 8px;
+      background: none; border: none;
+      color: var(--text-dim);
+      font-size: 11px; font-weight: 500;
+      cursor: pointer;
+    }
+    .nav-btn.active { color: var(--accent); }
+    .nav-btn svg    { width: 22px; height: 22px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border-radius: var(--r);
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .card-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-head h3  { font-size: 16px; font-weight: 600; }
+    .prev-badge    { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+    .prev-badge em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+    /* ── Sets table ── */
+    .sets-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 14px 2px;
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      color: var(--text-dim); letter-spacing: 0.4px;
+    }
+    .sh-num   { width: 28px; text-align: center; flex-shrink: 0; }
+    .sh-prev  { width: 68px; text-align: center; flex-shrink: 0; }
+    .sh-cur   { flex: 1; text-align: center; }
+    .sh-del   { width: 28px; flex-shrink: 0; }
+
+    .set-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .set-row:last-child { border-bottom: none; }
+
+    .set-num {
+      width: 28px; flex-shrink: 0;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-dim); text-align: center;
+    }
+    .set-prev {
+      width: 68px; flex-shrink: 0;
+      font-size: 14px; color: var(--text-dim);
+      text-align: center;
+    }
+    .weight-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 8px;
+      color: var(--text);
+      font-size: 20px; font-weight: 700;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    .weight-input::-webkit-outer-spin-button,
+    .weight-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .weight-input:focus { outline: none; border-color: var(--accent); background: #1e2e22; }
+    .weight-input::placeholder { color: #444; }
+
+    .weight-unit {
+      font-size: 12px; color: var(--text-dim);
+      flex-shrink: 0; width: 20px;
+    }
+
+    .card-foot { padding: 8px 12px 12px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 13px 20px;
+      border-radius: var(--r); border: none;
+      font-size: 15px; font-weight: 600;
+      cursor: pointer; width: 100%;
+    }
+    .btn:active { opacity: 0.75; }
+    .btn svg { width: 18px; height: 18px; }
+    .btn-primary  { background: var(--accent); color: #000; }
+    .btn-ghost    { background: transparent; color: var(--accent); border: 1.5px solid var(--border); }
+    .btn-sm       { padding: 9px 14px; font-size: 13px; }
+    .btn-sm svg   { width: 15px; height: 15px; }
+
+    /* ── Icon button ── */
+    .ibtn {
+      background: none; border: none;
+      color: var(--text-dim);
+      cursor: pointer; padding: 6px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .ibtn svg      { width: 20px; height: 20px; }
+    .ibtn:active   { background: var(--surface2); }
+    .ibtn.danger   { color: var(--danger); }
+    .ibtn.back     { color: var(--text); }
+
+    /* ── FAB ── */
+    .fab {
+      position: fixed;
+      bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+      right: max(16px, calc((100vw - 480px) / 2 + 16px));
+      background: var(--accent); color: #000;
+      border: none; border-radius: 50%;
+      width: 58px; height: 58px;
+      font-size: 30px; font-weight: 300;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 24px rgba(34,197,94,.45);
+      z-index: 15;
+    }
+    .fab:active { opacity: 0.8; transform: scale(0.95); }
+
+    /* ── Exercise list items ── */
+    .ex-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 15px 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .ex-item:last-child { border-bottom: none; }
+    .ex-item:active     { background: var(--surface2); }
+    .ex-item.used       { opacity: 0.38; cursor: default; }
+    .ex-name            { font-size: 16px; font-weight: 500; }
+    .ex-meta            { font-size: 12px; color: var(--text-dim); }
+    .ex-actions         { display: flex; gap: 4px; }
+
+    /* ── Text input ── */
+    .text-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r);
+      padding: 14px 16px;
+      color: var(--text); font-size: 16px;
+    }
+    .text-input:focus { outline: none; border-color: var(--accent); }
+
+    /* ── Misc ── */
+    .empty  { text-align: center; padding: 48px 20px; color: var(--text-dim); line-height: 1.6; }
+    label   { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 8px; }
+    .mt16   { margin-top: 16px; }
+    .start-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 220px; text-align: center; gap: 20px;
+    }
+    .start-wrap p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DATA LAYER
+// ═══════════════════════════════════════════════════════════
+
+const DB = {
+  getExercises() {
+    return JSON.parse(localStorage.getItem('gym_exercises') || '[]');
+  },
+  saveExercises(list) {
+    localStorage.setItem('gym_exercises', JSON.stringify(list));
+  },
+  getWorkouts() {
+    return JSON.parse(localStorage.getItem('gym_workouts') || '[]');
+  },
+  saveWorkouts(list) {
+    localStorage.setItem('gym_workouts', JSON.stringify(list));
+  },
+  todayKey() {
+    return new Date().toISOString().slice(0, 10);
+  },
+  getTodayWorkout() {
+    return this.getWorkouts().find(w => w.date === this.todayKey()) || null;
+  },
+  getOrCreateTodayWorkout() {
+    let w = this.getTodayWorkout();
+    if (!w) {
+      w = { date: this.todayKey(), exercises: [] };
+      const all = this.getWorkouts();
+      all.push(w);
+      this.saveWorkouts(all);
+    }
+    return w;
+  },
+  saveTodayWorkout(workout) {
+    const all = this.getWorkouts();
+    const i = all.findIndex(w => w.date === workout.date);
+    if (i >= 0) all[i] = workout; else all.push(workout);
+    this.saveWorkouts(all);
+  },
+  // Returns { date, sets } from most recent past workout containing this exercise
+  getPrevData(exerciseId) {
+    const today = this.todayKey();
+    const past = this.getWorkouts()
+      .filter(w => w.date < today)
+      .sort((a, b) => b.date.localeCompare(a.date));
+    for (const w of past) {
+      const ex = w.exercises.find(e => e.exerciseId === exerciseId);
+      if (ex && ex.sets.length > 0) return { date: w.date, sets: ex.sets };
+    }
+    return null;
+  },
+};
+
+// ═══════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function fmtDate(d) {
+  return new Date(d + 'T12:00:00').toLocaleDateString('pl-PL', {
+    weekday: 'long', day: 'numeric', month: 'long',
+  });
+}
+function fmtDateShort(d) {
+  return new Date(d + 'T12:00:00').toLocaleDateString('pl-PL', {
+    day: 'numeric', month: 'short',
+  });
+}
+function fmtWeight(w) {
+  return (w === '' || w === null || w === undefined) ? '–' : w + ' kg';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+
+let S = { tab: 'workout', view: 'home', returnTo: 'exercises' };
+
+function go(patch) {
+  Object.assign(S, patch);
+  render();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ICONS
+// ═══════════════════════════════════════════════════════════
+
+const I = {
+  dumbbell: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11M6.5 17.5h11"/><rect x="2" y="8" width="5" height="8" rx="1.5"/><rect x="17" y="8" width="5" height="8" rx="1.5"/><line x1="4.5" y1="12" x2="19.5" y2="12"/></svg>`,
+  list:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor"/><circle cx="3" cy="12" r="1" fill="currentColor"/><circle cx="3" cy="18" r="1" fill="currentColor"/></svg>`,
+  plus:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  trash:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
+  back:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`,
+  check:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+  x:        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+  edit:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+};
+
+// ═══════════════════════════════════════════════════════════
+//  VIEWS
+// ═══════════════════════════════════════════════════════════
+
+function viewWorkout() {
+  const workout  = DB.getTodayWorkout();
+  const exercises = DB.getExercises();
+
+  if (!workout || workout.exercises.length === 0) {
+    return `
+      <div class="header"><div><h1>Trening</h1><div class="subtitle">${fmtDate(DB.todayKey())}</div></div></div>
+      <div class="content">
+        <div class="start-wrap">
+          <p>Gotowy na dzisiejszy trening?<br>Dodaj pierwsze ćwiczenie.</p>
+          <button class="btn btn-primary" style="max-width:240px" onclick="goPickExercise()">
+            ${I.plus} Dodaj ćwiczenie
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  let cards = '';
+  workout.exercises.forEach((wex, i) => {
+    const ex   = exercises.find(e => e.id === wex.exerciseId);
+    const name = ex ? ex.name : '(usunięte)';
+    const prev = DB.getPrevData(wex.exerciseId);
+
+    // Previous data badge
+    let badge = '';
+    if (prev) {
+      const weights = prev.sets.map(s => fmtWeight(s.weight)).join(' · ');
+      badge = `<div class="prev-badge">poprzednio (${fmtDateShort(prev.date)}): <em>${weights}</em></div>`;
+    } else {
+      badge = `<div class="prev-badge">brak poprzednich danych</div>`;
+    }
+
+    // Column headers (only when there's previous data to compare)
+    let setsHead = '';
+    if (prev) {
+      setsHead = `
+        <div class="sets-head">
+          <div class="sh-num">SERIA</div>
+          <div class="sh-prev">POPRZEDNIO</div>
+          <div class="sh-cur">DZIŚ (kg)</div>
+          <div class="sh-del"></div>
+        </div>`;
+    }
+
+    // Set rows
+    let rows = '';
+    wex.sets.forEach((set, j) => {
+      const prevW = prev && prev.sets[j] != null ? fmtWeight(prev.sets[j].weight) : '';
+      rows += `
+        <div class="set-row">
+          <div class="set-num">S${j + 1}</div>
+          ${prev ? `<div class="set-prev">${prevW || '–'}</div>` : ''}
+          <input class="weight-input" type="number" inputmode="decimal" step="0.5" min="0"
+            value="${set.weight !== '' && set.weight != null ? set.weight : ''}"
+            placeholder="0"
+            onchange="updateWeight(${i},${j},this.value)"
+            onfocus="this.select()">
+          <div class="weight-unit">kg</div>
+          <button class="ibtn danger" onclick="deleteSet(${i},${j})" title="Usuń serię">${I.x}</button>
+        </div>`;
+    });
+
+    cards += `
+      <div class="card">
+        <div class="card-head">
+          <div style="flex:1;min-width:0">
+            <h3>${esc(name)}</h3>
+            ${badge}
+          </div>
+          <button class="ibtn danger" onclick="removeExerciseFromWorkout(${i})" title="Usuń z treningu">${I.trash}</button>
+        </div>
+        ${setsHead}
+        <div>${rows}</div>
+        <div class="card-foot">
+          <button class="btn btn-ghost btn-sm" onclick="addSet(${i})">${I.plus} Dodaj serię</button>
+        </div>
+      </div>`;
+  });
+
+  return `
+    <div class="header"><div><h1>Trening</h1><div class="subtitle">${fmtDate(DB.todayKey())}</div></div></div>
+    <div class="content">${cards}</div>
+    <button class="fab" onclick="goPickExercise()" title="Dodaj ćwiczenie">${I.plus}</button>
+  `;
+}
+
+function viewPickExercise() {
+  const exercises = DB.getExercises();
+  const workout   = DB.getTodayWorkout();
+  const usedIds   = new Set((workout?.exercises || []).map(e => e.exerciseId));
+
+  let list = '';
+  if (exercises.length === 0) {
+    list = `<div class="empty">Nie masz jeszcze żadnych ćwiczeń.<br>Dodaj pierwsze poniżej.</div>`;
+  } else {
+    list = `<div class="card">`;
+    exercises.forEach(ex => {
+      const used = usedIds.has(ex.id);
+      list += `
+        <div class="ex-item ${used ? 'used' : ''}"
+          ${used ? '' : `onclick="pickExercise('${ex.id}')"`}>
+          <span class="ex-name">${esc(ex.name)}</span>
+          ${used
+            ? `<span class="ex-meta">już dodane</span>`
+            : `<span style="color:var(--accent)">${I.plus}</span>`}
+        </div>`;
+    });
+    list += `</div>`;
+  }
+
+  return `
+    <div class="header">
+      <button class="ibtn back" onclick="go({view:'home'})">${I.back}</button>
+      <div><h1>Wybierz ćwiczenie</h1></div>
+    </div>
+    <div class="content">
+      ${list}
+      <button class="btn btn-ghost mt16" onclick="go({view:'add-exercise',returnTo:'pick'})">
+        ${I.plus} Nowe ćwiczenie
+      </button>
+    </div>
+  `;
+}
+
+function viewExercises() {
+  const exercises = DB.getExercises();
+
+  let list = '';
+  if (exercises.length === 0) {
+    list = `<div class="empty">Brak ćwiczeń.<br>Dodaj swoje pierwsze ćwiczenie.</div>`;
+  } else {
+    list = `<div class="card">`;
+    exercises.forEach(ex => {
+      list += `
+        <div class="ex-item" style="cursor:default">
+          <span class="ex-name">${esc(ex.name)}</span>
+          <div class="ex-actions">
+            <button class="ibtn" onclick="renameExercise('${ex.id}')" title="Zmień nazwę">${I.edit}</button>
+            <button class="ibtn danger" onclick="deleteExercise('${ex.id}')" title="Usuń">${I.trash}</button>
+          </div>
+        </div>`;
+    });
+    list += `</div>`;
+  }
+
+  return `
+    <div class="header"><div><h1>Moje ćwiczenia</h1></div></div>
+    <div class="content">
+      ${list}
+      <button class="btn btn-primary mt16" onclick="go({view:'add-exercise',returnTo:'exercises'})">
+        ${I.plus} Dodaj ćwiczenie
+      </button>
+    </div>
+  `;
+}
+
+function viewAddExercise() {
+  return `
+    <div class="header">
+      <button class="ibtn back" onclick="cancelAddExercise()">${I.back}</button>
+      <div><h1>Nowe ćwiczenie</h1></div>
+    </div>
+    <div class="content">
+      <label for="ex-name">Nazwa (twoja własna)</label>
+      <input id="ex-name" class="text-input" type="text"
+        placeholder="np. wyciskanie na ławce"
+        autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false"
+        onkeydown="if(event.key==='Enter')saveNewExercise()">
+      <div class="mt16">
+        <button class="btn btn-primary" onclick="saveNewExercise()">
+          ${I.check} Zapisz
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ACTIONS
+// ═══════════════════════════════════════════════════════════
+
+function goPickExercise() {
+  go({ view: 'pick-exercise' });
+}
+
+function pickExercise(id) {
+  const w = DB.getOrCreateTodayWorkout();
+  if (!w.exercises.find(e => e.exerciseId === id)) {
+    w.exercises.push({ exerciseId: id, sets: [{ weight: '' }] });
+    DB.saveTodayWorkout(w);
+  }
+  go({ tab: 'workout', view: 'home' });
+}
+
+function addSet(exIdx) {
+  const w = DB.getTodayWorkout();
+  if (!w) return;
+  w.exercises[exIdx].sets.push({ weight: '' });
+  DB.saveTodayWorkout(w);
+  render();
+}
+
+function deleteSet(exIdx, setIdx) {
+  const w = DB.getTodayWorkout();
+  if (!w) return;
+  const sets = w.exercises[exIdx].sets;
+  if (sets.length === 1) {
+    sets[0].weight = '';
+  } else {
+    sets.splice(setIdx, 1);
+  }
+  DB.saveTodayWorkout(w);
+  render();
+}
+
+function updateWeight(exIdx, setIdx, value) {
+  const w = DB.getTodayWorkout();
+  if (!w) return;
+  const parsed = parseFloat(value);
+  w.exercises[exIdx].sets[setIdx].weight = isNaN(parsed) ? '' : parsed;
+  DB.saveTodayWorkout(w);
+}
+
+function removeExerciseFromWorkout(exIdx) {
+  const w = DB.getTodayWorkout();
+  if (!w) return;
+  if (!confirm('Usunąć to ćwiczenie z dzisiejszego treningu?')) return;
+  w.exercises.splice(exIdx, 1);
+  DB.saveTodayWorkout(w);
+  render();
+}
+
+function saveNewExercise() {
+  const input = document.getElementById('ex-name');
+  const name  = input?.value?.trim();
+  if (!name) { input?.focus(); return; }
+
+  const exercises = DB.getExercises();
+  const newEx = { id: uid(), name };
+  exercises.push(newEx);
+  DB.saveExercises(exercises);
+
+  if (S.returnTo === 'pick') {
+    pickExercise(newEx.id);
+  } else {
+    go({ view: 'home', tab: 'exercises' });
+  }
+}
+
+function cancelAddExercise() {
+  if (S.returnTo === 'pick') {
+    go({ view: 'pick-exercise' });
+  } else {
+    go({ view: 'home', tab: 'exercises' });
+  }
+}
+
+function deleteExercise(id) {
+  if (!confirm('Usunąć to ćwiczenie? Historia treningów zostanie zachowana.')) return;
+  DB.saveExercises(DB.getExercises().filter(e => e.id !== id));
+  render();
+}
+
+function renameExercise(id) {
+  const exercises = DB.getExercises();
+  const ex = exercises.find(e => e.id === id);
+  if (!ex) return;
+  const name = prompt('Nowa nazwa:', ex.name);
+  if (!name?.trim()) return;
+  ex.name = name.trim();
+  DB.saveExercises(exercises);
+  render();
+}
+
+function setTab(tab) {
+  go({ tab, view: 'home' });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════════════
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function render() {
+  let body = '';
+  const showNav = S.view === 'home';
+
+  if (S.view === 'pick-exercise')  body = viewPickExercise();
+  else if (S.view === 'add-exercise') body = viewAddExercise();
+  else if (S.tab === 'workout')    body = viewWorkout();
+  else if (S.tab === 'exercises')  body = viewExercises();
+
+  const nav = showNav ? `
+    <nav class="bottom-nav">
+      <button class="nav-btn ${S.tab === 'workout'   ? 'active' : ''}" onclick="setTab('workout')">
+        ${I.dumbbell} Trening
+      </button>
+      <button class="nav-btn ${S.tab === 'exercises' ? 'active' : ''}" onclick="setTab('exercises')">
+        ${I.list} Ćwiczenia
+      </button>
+    </nav>` : '';
+
+  document.getElementById('app').innerHTML =
+    `<div style="flex:1;display:flex;flex-direction:column;overflow:hidden">${body}</div>${nav}`;
+
+  if (S.view === 'add-exercise') {
+    setTimeout(() => document.getElementById('ex-name')?.focus(), 80);
+  }
+}
+
+render();
+</script>
+</body>
+</html>
